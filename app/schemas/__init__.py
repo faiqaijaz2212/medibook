@@ -12,6 +12,12 @@ from app.schemas.doctor import (
     DoctorResponse,
     DoctorDetailResponse,
 )
+from app.schemas.patient import (
+    PatientBase,
+    PatientCreate,
+    PatientUpdate,
+    PatientResponse,
+)
 
 __all__ = [
     "UserRole",
@@ -28,4 +34,8 @@ __all__ = [
     "DoctorUpdate",
     "DoctorResponse",
     "DoctorDetailResponse",
+    "PatientBase",
+    "PatientCreate",
+    "PatientUpdate",
+    "PatientResponse",
 ]
