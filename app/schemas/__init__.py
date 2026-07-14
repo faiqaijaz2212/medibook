@@ -27,6 +27,13 @@ from app.schemas.appointment import (
     AppointmentResponse,
     AppointmentDetailResponse,
 )
+from app.schemas.medical_record import (
+    MedicalRecordBase,
+    MedicalRecordCreate,
+    MedicalRecordUpdate,
+    MedicalRecordResponse,
+    MedicalRecordDetailResponse,
+)
 
 __all__ = [
     "UserRole",
@@ -54,4 +61,9 @@ __all__ = [
     "AppointmentUpdateStatus",
     "AppointmentResponse",
     "AppointmentDetailResponse",
+    "MedicalRecordBase",
+    "MedicalRecordCreate",
+    "MedicalRecordUpdate",
+    "MedicalRecordResponse",
+    "MedicalRecordDetailResponse",
 ]

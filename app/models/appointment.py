@@ -30,3 +30,9 @@ class Appointment(Base, TimestampMixin):
     doctor: Mapped["Doctor"] = relationship(
         "Doctor", back_populates="appointments"
     )
+    medical_record: Mapped[Optional["MedicalRecord"]] = relationship(
+        "MedicalRecord",
+        back_populates="appointment",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
