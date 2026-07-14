@@ -22,9 +22,8 @@ class Patient(Base, TimestampMixin):
     )
     allergies: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
-    # Will be defined in Phase 5
-    # appointments: Mapped[List["Appointment"]] = relationship(
-    #     "Appointment",
-    #     back_populates="patient",
-    #     cascade="all, delete-orphan",
-    # )
+    appointments: Mapped[List["Appointment"]] = relationship(
+        "Appointment",
+        back_populates="patient",
+        cascade="all, delete-orphan",
+    )

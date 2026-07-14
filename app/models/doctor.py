@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy import String, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
@@ -26,4 +26,10 @@ class Doctor(Base, TimestampMixin):
         ForeignKey("users.id", ondelete="SET NULL"),
         unique=True,
         nullable=True,
+    )
+
+    appointments: Mapped[List["Appointment"]] = relationship(
+        "Appointment",
+        back_populates="doctor",
+        cascade="all, delete-orphan",
     )
