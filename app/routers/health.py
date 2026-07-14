@@ -6,9 +6,8 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("", response_model=dict)
 def health_check():
     return {
-        "status": "healthy",
-        "message": "MediBook API is running"
+        "status": "healthy"
     }
