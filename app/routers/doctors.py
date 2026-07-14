@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Optional
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
@@ -60,9 +61,19 @@ def create_doctor(
 
 
 @router.get("", response_model=List[DoctorDetailResponse])
-def get_doctors(db: Session = Depends(get_db), current_user=Depends(any_role)):
+def get_doctors(
+    department_id: Optional[int] = None,
+    experience_min: Optional[int] = None,
+    available_at: Optional[datetime] = None,
+    db: Session = Depends(get_db),
+    current_user=Depends(any_role),
+):
     doc_repo = DoctorRepository(db)
-    return doc_repo.get_all()
+    return doc_repo.get_all(
+        department_id=department_id,
+        experience_min=experience_min,
+        available_at=available_at,
+    )
 
 
 @router.get("/{id}", response_model=DoctorDetailResponse)

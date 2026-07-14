@@ -3,6 +3,7 @@ from typing import Optional, List
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 from app.models.appointment import Appointment
+from app.models.doctor import Doctor  # Import Doctor model to support JOIN query
 
 
 class AppointmentRepository:
@@ -15,11 +16,9 @@ class AppointmentRepository:
     def get_overlapping_doctor_appointments(
         self, doctor_id: int, time_val: datetime, exclude_id: Optional[int] = None
     ) -> List[Appointment]:
-        # Ensure time_val is naive UTC
         if time_val.tzinfo is not None:
             time_val = time_val.astimezone(timezone.utc).replace(tzinfo=None)
-        
-        # Overlap check: +/- 30 minutes from proposed time_val
+
         start_time = time_val - timedelta(minutes=29)
         end_time = time_val + timedelta(minutes=29)
 
@@ -37,7 +36,6 @@ class AppointmentRepository:
     def get_overlapping_patient_appointments(
         self, patient_id: int, time_val: datetime, exclude_id: Optional[int] = None
     ) -> List[Appointment]:
-        # Ensure time_val is naive UTC
         if time_val.tzinfo is not None:
             time_val = time_val.astimezone(timezone.utc).replace(tzinfo=None)
 
@@ -61,6 +59,9 @@ class AppointmentRepository:
         patient_id: Optional[int] = None,
         status_val: Optional[str] = None,
         date_val: Optional[date] = None,
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
+        department_id: Optional[int] = None,
         upcoming: bool = False,
         today: bool = False,
     ) -> List[Appointment]:
@@ -72,6 +73,10 @@ class AppointmentRepository:
             query = query.filter(Appointment.patient_id == patient_id)
         if status_val is not None:
             query = query.filter(Appointment.status == status_val)
+
+        if department_id is not None:
+            # Perform JOIN on Doctor model to filter by department
+            query = query.join(Doctor).filter(Doctor.department_id == department_id)
 
         if today:
             now_dt = datetime.utcnow()
@@ -86,6 +91,12 @@ class AppointmentRepository:
             query = query.filter(
                 Appointment.appointment_date.between(start_of_day, end_of_day)
             )
+        elif start_date is not None and end_date is not None:
+            start_datetime = datetime.combine(start_date, datetime.min.time())
+            end_datetime = datetime.combine(end_date, datetime.max.time())
+            query = query.filter(
+                Appointment.appointment_date.between(start_datetime, end_datetime)
+            )
 
         if upcoming:
             query = query.filter(
@@ -98,10 +109,9 @@ class AppointmentRepository:
         return query.order_by(Appointment.appointment_date.asc()).all()
 
     def create(self, **kwargs) -> Appointment:
-        # Convert appointment_date to naive UTC if it is aware
         if "appointment_date" in kwargs and kwargs["appointment_date"].tzinfo is not None:
             kwargs["appointment_date"] = kwargs["appointment_date"].astimezone(timezone.utc).replace(tzinfo=None)
-            
+
         db_app = Appointment(**kwargs)
         self.db.add(db_app)
         self.db.commit()
@@ -111,7 +121,7 @@ class AppointmentRepository:
     def update(self, db_app: Appointment, **kwargs) -> Appointment:
         if "appointment_date" in kwargs and kwargs["appointment_date"].tzinfo is not None:
             kwargs["appointment_date"] = kwargs["appointment_date"].astimezone(timezone.utc).replace(tzinfo=None)
-            
+
         for key, value in kwargs.items():
             if value is not None:
                 setattr(db_app, key, value)
