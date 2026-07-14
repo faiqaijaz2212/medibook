@@ -34,6 +34,7 @@ from app.schemas.medical_record import (
     MedicalRecordResponse,
     MedicalRecordDetailResponse,
 )
+from app.schemas.patient_document import PatientDocumentResponse
 
 __all__ = [
     "UserRole",
@@ -66,4 +67,5 @@ __all__ = [
     "MedicalRecordUpdate",
     "MedicalRecordResponse",
     "MedicalRecordDetailResponse",
+    "PatientDocumentResponse",
 ]

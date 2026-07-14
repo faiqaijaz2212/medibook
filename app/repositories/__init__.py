@@ -3,6 +3,7 @@ from app.repositories.doctor import DoctorRepository
 from app.repositories.patient import PatientRepository
 from app.repositories.appointment import AppointmentRepository
 from app.repositories.medical_record import MedicalRecordRepository
+from app.repositories.patient_document import PatientDocumentRepository
 
 __all__ = [
     "DepartmentRepository",
@@ -10,4 +11,5 @@ __all__ = [
     "PatientRepository",
     "AppointmentRepository",
     "MedicalRecordRepository",
+    "PatientDocumentRepository",
 ]

@@ -14,6 +14,7 @@ from app.routers import (
     patients,
     appointments,
     medical_records,
+    patient_documents,
 )
 
 
@@ -56,3 +57,4 @@ app.include_router(doctors.router)
 app.include_router(patients.router)
 app.include_router(appointments.router)
 app.include_router(medical_records.router)
+app.include_router(patient_documents.router)

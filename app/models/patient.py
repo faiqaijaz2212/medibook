@@ -27,3 +27,9 @@ class Patient(Base, TimestampMixin):
         back_populates="patient",
         cascade="all, delete-orphan",
     )
+
+    documents: Mapped[List["PatientDocument"]] = relationship(
+        "PatientDocument",
+        back_populates="patient",
+        cascade="all, delete-orphan",
+    )
